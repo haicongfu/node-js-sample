@@ -16,24 +16,20 @@ app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
-  logger.emit('abcd', {record: 'test'});
-  response.send('Hello World!')
+  // for health check
+  response.send()
 })
 
 app.post('/', function(request, response) {
-  console.log(request.body);
   var url = 'http://drnd-server4.nielsen.ninja/v2/acr/CBETID/'+request.body.cbetDetection.id; 
-  console.log(url);
+  var imei = request.body.deviceinfo.IMEI;
   lookup_request(url,function(err,res,body){
      if(err) console.log(err);
-     if(res.statusCode !== 200) console.log(res.statusCode);
-     if(!err && res.statusCode == 200  ) {
-       console.log('look up success');
-       console.log(body);
+     if(!err) {
+       logger.emit(imei, JSON.parse(body));
+       response.send(body);
      }
   })
-  logger.emit('abcd', {record: 'test'});
-  response.send('post received')
 })
 
 app.listen(app.get('port'), function() {
