@@ -11,7 +11,7 @@ logger.configure('fluentd.s3', {
    reconnectInterval: 600000 // 10 minutes
 });
 
-app.set('port', (process.env.PORT || 3000))
+app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 app.use(bodyParser.json());
 
