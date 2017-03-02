@@ -21,11 +21,17 @@ app.get('/', function(request, response) {
 })
 
 app.post('/', function(request, response) {
-  var url = 'http://drnd-server4.nielsen.ninja/v2/acr/CBETID/'+request.body.cbetDetection.id; 
+  //var url = 'http://drnd-server4.nielsen.ninja/v2/acr/CBETID/'+request.body.cbetDetection.id; 
+  var url = 'http://localhost:3000/v2/acr/CBETID/'+request.body.cbetDetection.id; 
   var imei = request.body.deviceinfo.IMEI;
   lookup_request(url,function(err,res,body){
-     if(err) console.log(err);
-     if(!err) {
+     if(err) {
+       //log info TBD
+       response.status(503).send("Service Unavailable");
+     } else if (res.statusCode != 200) {
+       //log info TBD
+       response.status(res.statusCode).send(body);
+     } else { 
        logger.emit(imei, JSON.parse(body));
        response.send(body);
      }
